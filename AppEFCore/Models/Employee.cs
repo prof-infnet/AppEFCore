@@ -9,5 +9,7 @@ namespace AppEFCore.Models
         public int DepartmentId { get; set; }
         public string Name { get; set; } = null!;
         public string Designation { get; set; } = null!;
+
+        public Department Department { get; set; }
     }
 }
