@@ -4,6 +4,7 @@ using AppEFCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppEFCore.Migrations
 {
     [DbContext(typeof(CompanyContext))]
-    partial class CompanyContextModelSnapshot : ModelSnapshot
+    [Migration("20221201110735_CountryCountryConvention")]
+    partial class CountryCountryConvention
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +32,7 @@ namespace AppEFCore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CountryPId")
+                    b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -38,32 +40,23 @@ namespace AppEFCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryPId");
+                    b.HasIndex("CountryId");
 
                     b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("AppEFCore.Models.Country", b =>
                 {
-                    b.Property<int>("PId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PId"), 1L, 1);
-
-                    b.Property<DateTime>("AddedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
-                        .HasDefaultValueSql("(getdate())");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("USA")
-                        .HasColumnName("CountryName");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PId");
+                    b.HasKey("Id");
 
                     b.ToTable("Countries");
                 });
@@ -108,58 +101,11 @@ namespace AppEFCore.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("AppEFCore.Models.Student", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Student");
-                });
-
-            modelBuilder.Entity("AppEFCore.Models.Teacher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teacher");
-                });
-
-            modelBuilder.Entity("AppEFCore.Models.TeacherStudent", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("int");
-
-                    b.HasKey("StudentId", "TeacherId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("TeacherStudent");
-                });
-
             modelBuilder.Entity("AppEFCore.Models.City", b =>
                 {
                     b.HasOne("AppEFCore.Models.Country", "Country")
                         .WithMany()
-                        .HasForeignKey("CountryPId");
+                        .HasForeignKey("CountryId");
 
                     b.Navigation("Country");
                 });
@@ -175,38 +121,9 @@ namespace AppEFCore.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("AppEFCore.Models.TeacherStudent", b =>
-                {
-                    b.HasOne("AppEFCore.Models.Student", "Student")
-                        .WithMany("TeacherStudent")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AppEFCore.Models.Teacher", "Teacher")
-                        .WithMany("TeacherStudent")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("AppEFCore.Models.Department", b =>
                 {
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("AppEFCore.Models.Student", b =>
-                {
-                    b.Navigation("TeacherStudent");
-                });
-
-            modelBuilder.Entity("AppEFCore.Models.Teacher", b =>
-                {
-                    b.Navigation("TeacherStudent");
                 });
 #pragma warning restore 612, 618
         }

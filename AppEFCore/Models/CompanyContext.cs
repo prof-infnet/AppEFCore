@@ -11,7 +11,62 @@ namespace AppEFCore.Models
         {
 
         }
-        public DbSet<Department> Department { get; set; }
-        public DbSet<Employee> Employee { get; set; }
+
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<City> Cities { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Country>().HasKey(s => s.PId);
+
+            modelBuilder.Entity<Country>(entity =>
+            {
+                entity.Property(e => e.Name)
+                    .HasColumnName("CountryName")
+                    .HasDefaultValue("USA")
+                    .IsRequired();
+
+                entity.Property(e => e.AddedOn)
+                    .HasColumnType("date")
+                    .HasDefaultValueSql("(getdate())");
+
+            });
+
+            modelBuilder.Entity<Country>().Ignore(e => e.Population);
+
+
+
+
+
+
+
+
+            modelBuilder.Entity<TeacherStudent>()
+                .HasKey(t => new { t.StudentId, t.TeacherId });
+
+            modelBuilder.Entity<TeacherStudent>()
+            .HasOne(t => t.Student)
+            .WithMany(t => t.TeacherStudent)
+            .HasForeignKey(t => t.StudentId);
+
+            modelBuilder.Entity<TeacherStudent>()
+            .HasOne(t => t.Teacher)
+            .WithMany(t => t.TeacherStudent)
+            .HasForeignKey(t => t.TeacherId);
+
+
+
+
+
+
+
+
+
+
+        }
+
     }
 }
