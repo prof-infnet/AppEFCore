@@ -20,6 +20,8 @@ namespace AppEFCore.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            #region Fluent Api
             modelBuilder.Entity<Country>().HasKey(s => s.PId);
 
             modelBuilder.Entity<Country>(entity =>
@@ -37,13 +39,6 @@ namespace AppEFCore.Models
 
             modelBuilder.Entity<Country>().Ignore(e => e.Population);
 
-
-
-
-
-
-
-
             modelBuilder.Entity<TeacherStudent>()
                 .HasKey(t => new { t.StudentId, t.TeacherId });
 
@@ -57,6 +52,34 @@ namespace AppEFCore.Models
             .WithMany(t => t.TeacherStudent)
             .HasForeignKey(t => t.TeacherId);
 
+            #endregion
+
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.Property(e => e.Designation)
+                .IsRequired()
+                .HasMaxLength(25)
+                .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+                entity.HasOne(d => d.Department)
+                .WithMany(p => p.Employee)
+                .HasForeignKey(d => d.DepartmentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Employee_Department");
+            });
 
 
 
@@ -66,7 +89,8 @@ namespace AppEFCore.Models
 
 
 
-        }
+
+            }
 
     }
 }
