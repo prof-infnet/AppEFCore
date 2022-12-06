@@ -54,6 +54,7 @@ namespace AppEFCore.Models
 
             #endregion
 
+            #region Employee/Department
             modelBuilder.Entity<Department>(entity =>
             {
                 entity.Property(e => e.Name)
@@ -77,10 +78,11 @@ namespace AppEFCore.Models
                 entity.HasOne(d => d.Department)
                 .WithMany(p => p.Employee)
                 .HasForeignKey(d => d.DepartmentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Employee_Department");
             });
 
+        #endregion
 
 
 
@@ -90,7 +92,8 @@ namespace AppEFCore.Models
 
 
 
-            }
+
+        }
 
     }
 }
